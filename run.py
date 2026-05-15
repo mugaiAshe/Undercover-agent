@@ -7,7 +7,7 @@ from logs import init_logging_state, write_final_state, print_header, print_subh
 
 load_dotenv()
 
-os.environ["OPENAI_API_KEY"] = "sk-f06b0f05ac4c4e05ac5213032d37cf98"
+os.environ["OPENAI_API_KEY"] = "sk-"
 api_key = os.getenv("OPENAI_API_KEY")
 
 
