@@ -1,141 +1,138 @@
-# Undercover Game (谁是卧底)
+# 谁是卧底 (Undercover Game)
 
-## Game Overview
+## 游戏简介
 
-This is a multiplayer social deduction game where:
-- **Civilians** (平民) share the same word and try to identify the one player with a different word
-- **Undercover** (卧底) has a different but similar word and tries to blend in without being discovered
+这是一个基于大语言模型的多智能体社交推理游戏：
 
-Each round, players describe their word without saying it directly. The Undercover must craft deliberately vague descriptions to survive, while Civilians try to give specific-enough descriptions to signal their shared knowledge. After all descriptions, everyone votes to eliminate the most suspicious player.
+- **平民** (Civilian)：所有人拿到相同的词，需要通过描述找到卧底
+- **卧底** (Undercover)：拿到一个与众不同的词，需要伪装自己不被发现
 
-The game includes a sophisticated deception detection system that analyzes every description in real time to determine trustworthiness.
+每轮游戏中，每位玩家在不直接说出词语的前提下描述自己拿到的词。卧底必须故意含糊其辞以求生存，而平民则需要给出足够具体的描述来传递信号。所有描述结束后，玩家投票淘汰最可疑的人。
 
-## Quick Start
+游戏内置了一套复杂的欺骗检测系统，实时分析每条描述的可信度。
 
-See also: `LOGGING.md` and `METHODOLOGY.md` for detailed logging and methodology docs.
+## 快速开始
 
-### Prerequisites
+详细的日志和方法论文档请参阅 `LOGGING.md` 和 `METHODOLOGY.md`。
+
+### 环境要求
 - Python 3.8+
-- DeepSeek API key
+- DeepSeek API 密钥
 
-### Installation
+### 安装步骤
 
-1. **Clone and setup the environment:**
+1. **克隆仓库并设置环境：**
 ```bash
 git clone https://github.com/mugaiAshe/Undercover-agent.git
 cd Undercover-agent
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows 下执行: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-2. **Set up your DeepSeek API key:**
+2. **设置 API 密钥：**
 ```bash
-export DEEPSEEK_API_KEY="your-deepseek-api-key"
+export DEEPSEEK_API_KEY="你的deepseek-api密钥"
 ```
 
-3. **Run the game:**
+3. **运行游戏：**
 ```bash
 python3 run.py
 ```
 
-### Game Features
+### 游戏特性
 
-- **Dynamic AI Players**: Each player has their own personality and strategy
-- **Advanced Deception Detection**: Real-time analysis of player descriptions for deceptive intent
-- **Bidding-Based Speaking Order**: Players bid for the chance to describe their word, creating dynamic turn-taking
-- **Voting System**: Democratic elimination voting with deception analysis
-- **Game State Tracking**: Comprehensive logging of all game events
+- **动态 AI 玩家**：每位玩家拥有独立的个性和策略
+- **欺骗检测系统**：实时分析玩家描述中的欺骗意图
+- **竞价发言机制**：玩家通过出价竞争发言顺序，产生动态的发言轮次
+- **投票淘汰系统**：结合欺骗分析的民主投票机制
+- **完整日志记录**：所有游戏事件均有结构化日志
 
-## Project Structure
+## 项目结构
 
 ```
 Undercover-agent/
-├── run.py                  # Main game entry point
-├── game_graph.py           # Game logic and state machine
-├── player.py               # Player class with AI behavior
-├── deception_detection.py  # Deception analysis system
-├── Bidding.py              # Bidding mechanics for speaking order
-├── config.py               # Game configuration
-├── requirements.txt        # Python dependencies
-└── README.md               # This file
+├── run.py                  # 游戏入口
+├── game_graph.py           # 游戏逻辑与状态机
+├── player.py               # AI 玩家行为类
+├── deception_detection.py  # 欺骗检测分析系统
+├── Bidding.py              # 竞价发言机制
+├── config.py               # 游戏配置
+├── requirements.txt        # Python 依赖
+└── README.md               # 本文件
 ```
 
-## How to Play
+## 玩法说明
 
-### Game Flow
+### 游戏流程
 
-1. **Setup Phase**:
-   - A word pair is selected (e.g. "苹果" vs "梨")
-   - One player is randomly chosen as the Undercover and receives the different word
-   - All other players (Civilians) receive the same word
+1. **准备阶段**：
+   - 随机选择一组词语对（如"苹果"和"梨"）
+   - 随机选择一名玩家作为卧底，获得不同的词
+   - 其余玩家（平民）获得相同的词
 
-2. **Description Phase**:
-   - Players bid for speaking priority
-   - Each player describes their word without saying it directly
-   - Deception detection analyzes every description in real time
+2. **描述阶段**：
+   - 玩家通过竞价获得发言优先权
+   - 每位玩家在不直接说出词语的前提下描述自己的词
+   - 欺骗检测系统实时分析每条描述
 
-3. **Voting Phase**:
-   - All players vote for who they think is the Undercover
-   - Majority vote eliminates a player
+3. **投票阶段**：
+   - 所有玩家投票选出谁最可能是卧底
+   - 获得多数票的玩家被淘汰
 
-4. **Win Condition Check**:
-   - If the Undercover is eliminated → Civilians win
-   - If the Undercover survives until only 2 players remain → Undercover wins
-   - Otherwise → new round begins
+4. **胜负判定**：
+   - 卧底被淘汰 → 平民获胜
+   - 卧底存活至仅剩 2 人 → 卧底获胜
+   - 否则 → 进入下一轮
 
-### Player Roles
+### 角色介绍
 
-- **Civilian** (平民): Shares the same word with other Civilians. Tries to give specific-enough descriptions to signal shared knowledge while identifying vague or off descriptions from the Undercover.
-- **Undercover** (卧底): Has a different word from everyone else. Must be deliberately vague to blend in, while trying to guess what the Civilians' word might be.
+- **平民**：与其他平民共享同一个词。需要给出足够具体的描述来表明自己知道正确的词，同时识别出描述含糊或偏离的卧底。
+- **卧底**：拿到与其他人不同的词。必须刻意含糊其辞来融入群体，同时试图猜测平民手中的正确词语。
 
-## Deception Detection
+## 欺骗检测系统
 
-The game includes a sophisticated deception detection system that:
+游戏内置了一套复杂的欺骗检测系统，包括：
 
-- **Self-Analysis**: Players analyze their own descriptions for deceptive intent
-- **Peer Analysis**: Other players analyze each description for deception
-- **Historical Tracking**: Maintains deception history for each player
-- **Confidence Scoring**: Provides confidence levels for deception assessments
-- **Chain-of-Thought Reasoning**: Step-by-step reasoning for every deception judgment
+- **自我分析**：发言者分析自己描述中的欺骗意图
+- **同伴分析**：其他玩家分析每条描述是否存在欺骗
+- **历史追踪**：维护每位玩家的欺骗历史记录
+- **置信度评分**：为欺骗判断提供置信度评估
+- **思维链推理**：每一步欺骗判断都有完整的推理过程
 
-## Configuration
+## 配置说明
 
-Edit `config.py` to customize:
-- Number of players
-- Model selection (supports deepseek-v4-flash, deepseek-v4-pro, deepseek-chat)
-- Game parameters
-- Debug settings
+编辑 `config.py` 可自定义以下内容：
+- 玩家数量
+- 模型选择（支持 deepseek-v4-flash、deepseek-v4-pro、deepseek-chat）
+- 游戏参数
+- 调试设置
 
-## Troubleshooting
+## 常见问题
 
-### Common Issues
+### 常见错误
 
-1. **API Request Timeout**
-   - **Cause**: Model inference takes longer than the timeout limit
-   - **Solution**: Request timeout is set to 120s with 3 retries by default
+1. **API 请求超时**
+   - **原因**：模型推理时间超过超时限制
+   - **解决**：默认超时已设为 120 秒并带有 3 次重试
 
-2. **Missing API Key**
-   - **Solution**: Set `DEEPSEEK_API_KEY` environment variable or pass `--api-key` argument
+2. **缺少 API 密钥**
+   - **解决**：设置 `DEEPSEEK_API_KEY` 环境变量，或使用 `--api-key` 参数传入
 
-3. **Import Errors**
-   - **Solution**: Ensure all dependencies are installed: `pip install -r requirements.txt`
-   - **Check**: Verify Python version is 3.8+
+3. **导入错误**
+   - **解决**：确保已安装所有依赖：`pip install -r requirements.txt`
+   - **检查**：确认 Python 版本为 3.8 以上
 
-## Game Logs
+## 游戏日志
 
-The game generates comprehensive logs. See `LOGGING.md` for full details.
-- Events (NDJSON): One JSON event per line streamed during the run
-- Final State JSON: Complete final game state
-- Console output: Real-time game events
-- Deception analysis: Detailed deception assessments
+游戏会生成详细的运行日志，详见 `LOGGING.md`：
+- 事件日志 (NDJSON)：按时间顺序的 JSON 事件流
+- 最终状态 JSON：完整的游戏结束状态
+- 控制台输出：实时游戏事件
+- 欺骗分析：详细的欺骗评估记录
 
-## License
+## 致谢
 
-This project is open source. See LICENSE file for details.
-
-## Acknowledgments
-
-- Built with LangChain and LangGraph
-- Powered by DeepSeek API
-- Inspired by the classic "Who is the Undercover" (谁是卧底) party game
+- 基于 LangChain 和 LangGraph 构建
+- 由 DeepSeek API 驱动
+- 灵感来自经典的"谁是卧底"聚会游戏
