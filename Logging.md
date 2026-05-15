@@ -1,59 +1,59 @@
-### Logging and Data Access
+### 日志记录与数据访问
 
-This project streams all game events to disk and writes a final full-state JSON snapshot for every run.
+本项目将每次运行的所有游戏事件流式写入磁盘，并在运行结束时写入一份完整的状态 JSON 快照。
 
-- Events (NDJSON): `logs/<run_id>/events.ndjson`
-  - One JSON object per line, in chronological order
-  - Contains: timestamp, round, step, phase, event type, actor, and `details`
-  - `details` may include raw model prompts and responses under `_prompt` and `_raw_response`
-- Final State JSON: `logs/<run_id>/game_state.json`
-  - Full Pydantic-serialized `GameState` including `game_logs`, deception history, scores, etc.
-- Final Metrics JSON: `logs/<run_id>/final_metrics.json`
-  - Clean research-ready metrics only (no raw prompts/responses)
-  - Includes: per-player deception totals and average suspicion, cross-perception score matrix, per-observer detection accuracy (accuracy/precision/recall/f1), and time/round trends of average suspicion and fraction of observers flagging deception
-- Run Metadata: `logs/<run_id>/run_meta.json`
-  - Players, roles, words, model name, timestamps
-- Runs Index: `logs/index.jsonl`
-  - One-line JSON index of all past runs with paths
+- 事件日志 (NDJSON)：`logs/<run_id>/events.ndjson`
+  - 每行一个 JSON 对象，按时间顺序排列
+  - 包含：时间戳、轮次、步骤、阶段、事件类型、参与者以及 `details`（详细信息）
+  - `details` 中可能包含 `_prompt` 和 `_raw_response` 下的原始模型提示词与响应
+- 最终状态 JSON：`logs/<run_id>/game_state.json`
+  - 完整的 Pydantic 序列化 `GameState`，包括 `game_logs`、欺骗历史记录、评分等
+- 最终指标 JSON：`logs/<run_id>/final_metrics.json`
+  - 仅包含干净的研究级指标（不含原始提示词/响应）
+  - 包含：每位玩家的欺骗统计和平均可疑度、交叉感知评分矩阵、每位观察者的检测准确率（准确率/精确率/召回率/F1），以及平均可疑度和观察者标记欺骗比例的时间/轮次趋势
+- 运行元数据：`logs/<run_id>/run_meta.json`
+  - 玩家、角色、词语、模型名称、时间戳
+- 运行索引：`logs/index.jsonl`
+  - 一行 JSON，包含所有历史运行及其路径
 
-#### Configure where logs are saved
+#### 配置日志保存位置
 
-- CLI flag: `--log-dir ./logs` (default is `./logs`)
-- Disable file logging entirely: `--no-file-logging`
-- Environment variable alternative: `LOG_DIR=/custom/path python3 run.py`
+- 命令行参数：`--log-dir ./logs`（默认为 `./logs`）
+- 完全禁用文件日志：`--no-file-logging`
+- 环境变量方式：`LOG_DIR=/自定义路径 python3 run.py`
 
-#### Quick examples with jq
+#### jq 快速示例
 
-- Tail events while the game runs:
+- 在游戏运行时实时查看事件：
 ```bash
 jq -c . logs/<run_id>/events.ndjson
 ```
 
-- Filter only description events:
+- 仅筛选描述事件：
 ```bash
 jq -c 'select(.event=="describe")' logs/<run_id>/events.ndjson
 ```
 
-- Extract all raw model responses for auditing:
+- 提取所有原始模型响应以供审计：
 ```bash
 jq -r 'select(.details._raw_response) | .details._raw_response' logs/<run_id>/events.ndjson
 ```
 
-- Get final winner and survivors from the snapshot:
+- 从快照中获取最终胜者和存活者：
 ```bash
 jq '.winner, .alive_players' logs/<run_id>/game_state.json
 ```
 
-- List your most recent runs:
+- 列出最近的运行记录：
 ```bash
 tail -n 20 logs/index.jsonl | jq -c .
 ```
 
-#### What gets logged
+#### 记录的内容
 
-- Description actions: describe (includes model prompts and raw responses)
-- Voting actions: vote, exile
-- Deception analyses: self and peer analyses for every description
-- Phase transitions and win checks
+- 描述动作：describe（包含模型提示词和原始响应）
+- 投票动作：vote、exile
+- 欺骗分析：每条描述的自我分析和同伴分析
+- 阶段转换和胜负判定
 
-All raw model responses and the exact prompts are preserved for reproducibility under `_raw_response` and `_prompt` when available.
+所有原始模型响应和确切提示词均保存在 `_raw_response` 和 `_prompt` 下，以确保可复现性。
