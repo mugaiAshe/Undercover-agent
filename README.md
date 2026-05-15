@@ -16,7 +16,7 @@
 详细的日志和方法论文档请参阅 `LOGGING.md` 和 `METHODOLOGY.md`。
 
 ### 环境要求
-- Python 3.8+
+- Python 3.12
 - DeepSeek API 密钥
 
 ### 安装步骤
@@ -121,7 +121,7 @@ Undercover-agent/
 
 3. **导入错误**
    - **解决**：确保已安装所有依赖：`pip install -r requirements.txt`
-   - **检查**：确认 Python 版本为 3.8 以上
+   - **检查**：确认 Python 版本为 3.12
 
 ## 游戏日志
 
