@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Undercover Game (谁是卧底) Startup Script
+# Undercover Game (谁是卧底) Startup Script — DeepSeek API
 echo "Undercover AI Game Launcher (谁是卧底)"
 echo "====================================="
 
@@ -27,7 +27,7 @@ else
     source venv/bin/activate
 fi
 
-# Check if Python dependencies are installed
+# Check if Python dependencies are installed (langchain_openai is used for DeepSeek's OpenAI-compatible API)
 echo "Checking dependencies..."
 if ! python3 -c "import langchain_openai" &> /dev/null; then
     echo "Installing missing dependencies..."

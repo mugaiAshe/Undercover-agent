@@ -1,42 +1,28 @@
 # Undercover Game (谁是卧底) Configuration
 
-# Available models
+# Available DeepSeek models
 AVAILABLE_MODELS = {
-    "gpt-4o": {
-        "name": "gpt-4o",
-        "description": "OpenAI GPT-4o",
+    "deepseek-v4-flash": {
+        "name": "deepseek-v4-flash",
+        "description": "DeepSeek V4 Flash — fast and efficient",
         "temperature": 0.7,
         "max_tokens": None,
-        "provider": "openai"
+        "provider": "deepseek"
     },
-    "gpt-4o-mini": {
-        "name": "gpt-4o-mini",
-        "description": "OpenAI GPT-4o Mini",
+    "deepseek-v4-pro": {
+        "name": "deepseek-v4-pro",
+        "description": "DeepSeek V4 Pro — flagship reasoning model with 1M context",
         "temperature": 0.7,
         "max_tokens": None,
-        "provider": "openai"
+        "provider": "deepseek"
     },
-    "gemini-pro": {
-        "name": "gemini-pro",
-        "description": "Gemini Pro",
+    "deepseek-chat": {
+        "name": "deepseek-chat",
+        "description": "DeepSeek Chat — general-purpose chat model",
         "temperature": 0.7,
         "max_tokens": None,
-        "provider": "google"
+        "provider": "deepseek"
     },
-    "gemini-1.5-pro": {
-        "name": "gemini-1.5-pro",
-        "description": "Gemini 1.5 Pro",
-        "temperature": 0.7,
-        "max_tokens": None,
-        "provider": "google"
-    },
-    "gemini-1.5-flash": {
-        "name": "gemini-1.5-flash",
-        "description": "Gemini 1.5 Flash",
-        "temperature": 0.7,
-        "max_tokens": None,
-        "provider": "google"
-    }
 }
 
 DEFAULT_MODEL = "deepseek-v4-flash"
@@ -48,8 +34,7 @@ GAME_CONFIG = {
 
 # Environment settings
 ENV_CONFIG = {
-    "google_api_key_env": "GOOGLE_API_KEY",
-    "openai_api_key_env": "OPENAI_API_KEY",
+    "deepseek_api_key_env": "DEEPSEEK_API_KEY",
     "debug_mode": True,
     "log_level": "INFO"
 }

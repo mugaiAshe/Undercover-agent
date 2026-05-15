@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional, Literal, ClassVar
 import json, re
+# DeepSeek API uses OpenAI-compatible SDK; langchain_openai is the correct package
 from langchain_openai import ChatOpenAI
 
 
@@ -8,7 +9,7 @@ class Player(BaseModel):
     name: str
     role: Literal["Civilian", "Undercover"]
     word: str = ""  # the word this player received
-    llm: ChatOpenAI
+    llm: ChatOpenAI  # DeepSeek LLM instance (via OpenAI-compatible SDK)
     is_alive: bool = True
     scratchpad: List[str] = Field(default_factory=list)
     statements: List[str] = Field(default_factory=list)

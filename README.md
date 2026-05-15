@@ -16,22 +16,22 @@ See also: `LOGGING.md` and `METHODOLOGY.md` for detailed logging and methodology
 
 ### Prerequisites
 - Python 3.8+
-- OpenAI-compatible API key (DeepSeek, OpenAI, etc.)
+- DeepSeek API key
 
 ### Installation
 
 1. **Clone and setup the environment:**
 ```bash
-git clone <repository-url>
-cd undercover-game
+git clone https://github.com/mugaiAshe/Undercover-agent.git
+cd Undercover-agent
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-2. **Set up your API key:**
+2. **Set up your DeepSeek API key:**
 ```bash
-export OPENAI_API_KEY="your-api-key-here"
+export DEEPSEEK_API_KEY="your-deepseek-api-key"
 ```
 
 3. **Run the game:**
@@ -50,7 +50,7 @@ python3 run.py
 ## Project Structure
 
 ```
-undercover-game/
+Undercover-agent/
 ├── run.py                  # Main game entry point
 ├── game_graph.py           # Game logic and state machine
 ├── player.py               # Player class with AI behavior
@@ -103,9 +103,24 @@ The game includes a sophisticated deception detection system that:
 
 Edit `config.py` to customize:
 - Number of players
-- Model selection
+- Model selection (supports deepseek-v4-flash, deepseek-v4-pro, deepseek-chat)
 - Game parameters
 - Debug settings
+
+## Troubleshooting
+
+### Common Issues
+
+1. **API Request Timeout**
+   - **Cause**: Model inference takes longer than the timeout limit
+   - **Solution**: Request timeout is set to 120s with 3 retries by default
+
+2. **Missing API Key**
+   - **Solution**: Set `DEEPSEEK_API_KEY` environment variable or pass `--api-key` argument
+
+3. **Import Errors**
+   - **Solution**: Ensure all dependencies are installed: `pip install -r requirements.txt`
+   - **Check**: Verify Python version is 3.8+
 
 ## Game Logs
 
@@ -115,8 +130,12 @@ The game generates comprehensive logs. See `LOGGING.md` for full details.
 - Console output: Real-time game events
 - Deception analysis: Detailed deception assessments
 
+## License
+
+This project is open source. See LICENSE file for details.
+
 ## Acknowledgments
 
 - Built with LangChain and LangGraph
-- Powered by DeepSeek / OpenAI-compatible LLM APIs
+- Powered by DeepSeek API
 - Inspired by the classic "Who is the Undercover" (谁是卧底) party game

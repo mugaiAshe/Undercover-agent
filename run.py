@@ -1,5 +1,6 @@
 from game_graph import graph, GameState, WORD_PAIRS
 from player import Player
+# DeepSeek API uses OpenAI-compatible SDK; langchain_openai is the correct package
 from langchain_openai import ChatOpenAI
 import os, random, argparse
 from dotenv import load_dotenv
@@ -7,15 +8,16 @@ from logs import init_logging_state, write_final_state, print_header, print_subh
 
 load_dotenv()
 
-os.environ["OPENAI_API_KEY"] = "sk-"
-api_key = os.getenv("OPENAI_API_KEY")
+# DeepSeek API key — mapped to OPENAI_API_KEY for SDK compatibility
+os.environ["OPENAI_API_KEY"] = os.getenv("DEEPSEEK_API_KEY", "")
 
 
 def get_llm(model_name="deepseek-v4-flash", api_key=None):
+    """Initialize the DeepSeek language model."""
     if api_key:
         os.environ["OPENAI_API_KEY"] = api_key
     elif not os.environ.get("OPENAI_API_KEY"):
-        raise ValueError("OPENAI_API_KEY environment variable not set")
+        raise ValueError("DEEPSEEK_API_KEY environment variable not set and no --api-key provided")
     os.environ["MODEL_NAME"] = model_name
     return ChatOpenAI(
         model=model_name, temperature=0.7,
@@ -100,9 +102,9 @@ def run_game(model_name="deepseek-v4-flash", api_key=None,
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run Undercover Game (谁是卧底) with AI players")
-    parser.add_argument("--model", default="deepseek-v4-flash", help="Model name")
-    parser.add_argument("--api-key", help="OpenAI-compatible API key")
+    parser = argparse.ArgumentParser(description="Run Undercover Game (谁是卧底) with AI players via DeepSeek API")
+    parser.add_argument("--model", default="deepseek-v4-flash", help="DeepSeek model name")
+    parser.add_argument("--api-key", help="DeepSeek API key (or set DEEPSEEK_API_KEY env var)")
     parser.add_argument("--log-dir", default="./logs", help="Log directory")
     parser.add_argument("--no-file-logging", action="store_true", help="Disable file logging")
     args = parser.parse_args()

@@ -1,4 +1,5 @@
 import random
+# DeepSeek API uses OpenAI-compatible SDK
 from langchain_openai import ChatOpenAI
 import os
 
@@ -6,14 +7,22 @@ _llm = None
 
 
 def get_llm():
+    """Lazily initialize the DeepSeek LLM instance."""
     global _llm
     if _llm is None:
         model_name = os.environ.get("MODEL_NAME", "deepseek-v4-flash")
-        _llm = ChatOpenAI(model=model_name, temperature=0.7, base_url="https://api.deepseek.com", request_timeout=120, max_retries=3)
+        _llm = ChatOpenAI(
+            model=model_name, temperature=0.7,
+            base_url="https://api.deepseek.com",
+            request_timeout=120, max_retries=3
+        )
     return _llm
 
 
 def get_bid(player_name: str, dialogue_history: str):
+    """
+    Calls DeepSeek to get a bid (0-10) from a player based on descriptions so far.
+    """
     prompt = f"""
 You are a player in a game of "Who is the Undercover". Your name is {player_name}.
 Here are the descriptions so far:
@@ -39,6 +48,12 @@ def get_max_bids(bid_dict):
 
 
 def choose_next_speaker(bid_dict, previous_dialogue=None):
+    """
+    Given a dictionary of player bids, returns the chosen speaker using:
+    - Max bid
+    - Mention bias from previous dialogue
+    - Random tiebreaking
+    """
     top_bidders = get_max_bids(bid_dict)
     if previous_dialogue:
         top_bidders += [name for name in top_bidders if name in previous_dialogue]
